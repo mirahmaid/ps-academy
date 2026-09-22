@@ -15,21 +15,21 @@ const RIGHT_CARD_SHAPE = {
 
 const LEFT_CARD_SHAPE = {
   borderColor: "#D24D65",
-  bgColor: "bg-[#00D4FF1A]",
+  bgColor: "bg-[#D24D651A]",
   borderWidth: 1,
   radius: { topLeft: 180, topRight: 0, bottomRight: 180, bottomLeft: 180 },
 };
 
 const RIGHT_CARD_SHAPE_BOTTOM_ROW = {
   borderColor: "#00D4FF",
-  bgColor: "bg-[#002C5A1A]",
+  bgColor: "bg-[#00D4FF1A]",
   borderWidth: 1,
   radius: { topLeft: 180, topRight: 180, bottomRight: 180, bottomLeft: 0 },
 };
 
 const LEFT_CARD_SHAPE_BOTTOM_ROW = {
   borderColor: "#F2FF00",
-  bgColor: "bg-[#7676761A]",
+  bgColor: "bg-[#F2FF001A]",
   borderWidth: 1,
   radius: { topLeft: 180, topRight: 180, bottomRight: 0, bottomLeft: 180 },
 };

@@ -3,12 +3,14 @@ import { Loader2, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import FormInput from "../forgot-password/components/FormInput";
 import PasswordInput from "../reset-password/components/PasswordInput";
+import { usePendingEmail } from "../verify-otp/Pendingverification";
 
 // غيّر هاد الرابط حسب طريقة الـ env عندك (Vite: import.meta.env.VITE_API_URL / CRA: process.env.REACT_APP_API_URL)
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Register() {
   const navigate = useNavigate();
+  const { setPendingEmail } = usePendingEmail();
   const [loading, setLoading] = useState(false);
 
   const [firstNameError, setFirstNameError] = useState("");
@@ -106,7 +108,11 @@ export default function Register() {
       const data = await res.json();
 
       if (res.status === 201) {
-        navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
+        // بدل تمرير الإيميل عبر الـ URL (?email=...)، نخزنه مؤقتاً بالـ sessionStorage
+        setPendingEmail(email);
+        // replace: true لأنه ما في معنى ترجع بزر الرجوع لفورم تسجيل
+        // انحفظ أصلاً بالباك اند
+        navigate("/verify-otp", { replace: true });
         return;
       }
 

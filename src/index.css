@@ -80,3 +80,23 @@ html {
 .font-Ubuntu {
   font-family: "Ubuntu", sans-serif;
 }
+@theme {
+  --font-sans: "Ubuntu", sans-serif;
+}
+.books-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background-color: #e2e8f0;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.books-bullet-active {
+  width: 24px;
+  background: linear-gradient(90deg, #001b3a, #0f2a4a);
+}
+.subjects-slider .swiper-wrapper {
+  transition-timing-function: linear !important;
+}

@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OtpInput from "./components/OtpInput";
+import { usePendingEmail } from "./Pendingverification";
 
 const OTP_LENGTH = 6;
 const RESEND_SECONDS = 59;
@@ -11,14 +12,20 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export default function VerifyOtp() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const email = searchParams.get("email") || "";
+  const { email, clearPendingEmail } = usePendingEmail();
 
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
   const [loading, setLoading] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [resending, setResending] = useState(false);
   const [error, setError] = useState(() => (email ? "" : "انتهت الجلسة، الرجاء إعادة التسجيل"));
+
+  // في حال صار الإيميل فاضي (مثلاً فتح الصفحة مباشرة بدون تسجيل)
+  useEffect(() => {
+    if (!email) {
+      setError("انتهت الجلسة، الرجاء إعادة التسجيل");
+    }
+  }, [email]);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -57,7 +64,11 @@ export default function VerifyOtp() {
       });
 
       if (res.ok) {
-        navigate("/login");
+        // انتهى الغرض من الإيميل المؤقت، نمسحه من sessionStorage
+        clearPendingEmail();
+        // replace: true لأنه ما في معنى ترجع بزر الرجوع لصفحة إدخال
+        // رمز انتهى الغرض منه أصلاً
+        navigate("/login", { replace: true });
         return;
       }
       if (res.status === 400) setError("البيانات المدخلة غير صحيحة");

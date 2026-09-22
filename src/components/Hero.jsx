@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 
-function Hero() {
+function Hero({ hideCta = false }) {
   const containerRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -32,8 +32,12 @@ function Hero() {
           { opacity: 0, y: 20 },
           { opacity: 1, y: 0, duration: 0.7 },
           "-=0.4"
-        )
-        .fromTo(
+        );
+
+      // زر "سجل الآن مجاناً" ممكن يكون مش موجود بالـ DOM أصلاً
+      // (لما hideCta تكون true)، فمنتأكد قبل ما نحركه.
+      if (!hideCta) {
+        tl.fromTo(
           ".hero-cta",
           { opacity: 0, scale: 0.9 },
           {
@@ -44,10 +48,11 @@ function Hero() {
           },
           "-=0.3"
         );
+      }
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [hideCta]);
 
   return (
     <section
@@ -89,12 +94,14 @@ function Hero() {
           فَرْدِيَّة.
         </p>
 
-        <a
-          href="/register"
-          className="hero-cta mt-8 inline-block w-fit bg-[#002C5A] hover:bg-[#2fa07f] text-white px-12 py-3 text-[20px] rounded-full font-bold transition opacity-0"
-        >
-          سجل الآن مجاناً
-        </a>
+        {!hideCta && (
+          <a
+            href="/register"
+            className="hero-cta mt-8 inline-block w-fit bg-[#002C5A] hover:bg-[#2fa07f] text-white px-12 py-3 text-[20px] rounded-full font-bold transition opacity-0"
+          >
+            سجل الآن مجاناً
+          </a>
+        )}
       </div>
     </section>
   );

@@ -1,6 +1,10 @@
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { ToastProvider } from "./components/ui/ToastProvider";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+
 import Header from "./components/Header/Header";
+
 import Hero from "./components/Hero";
 import StatsSection from "./components/Stats/StatsSection";
 import Features from "./components/Features/Features";
@@ -10,38 +14,122 @@ import FAQSection from "./components/FAQ/FAQSection";
 import CTASection from "./components/CTASection";
 import Footer from "./components/Footer/Footer";
 
+import HomePage from "./components/pages/home/page";
+import SelectBranchPage from "./components/pages/select-branch/page";
 import LoginPage from "./components/pages/login/page";
 import RegisterPage from "./components/pages/register/page";
+import VerifyOtpPage from "./components/pages/verify-otp/page";
 import ForgotPasswordPage from "./components/pages/forgot-password/page";
 import ResetPasswordPage from "./components/pages/reset-password/page";
 
-function HomePage() {
+import AIAssistantPage from "./components/pages/ai-path/AIAssistantPage";
+// =========================
+// Landing Page (المحتوى نفسه)
+// =========================
+
+function LandingPageContent() {
   return (
-    <>
-      <Header />
-      <Hero />
-      <StatsSection />
-      <Features />
-      <ContactSection />
-      <Testimonials />
-      <FAQSection />
-      <CTASection />
+    <div className="min-h-screen">
+      <Header landingPage />
+
+      <main>
+        <Hero />
+        <StatsSection />
+        <Features />
+        <ContactSection />
+        <Testimonials />
+        <FAQSection />
+        <CTASection />
+      </main>
+
       <Footer />
-    </>
+    </div>
   );
 }
+
+// =========================
+// Landing Route (بوابة الحماية)
+// =========================
+function LandingRoute() {
+  const navigate = useNavigate();
+  const { isLoggedIn, isLoading, selectedBranch } = useAuth();
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (!isLoggedIn) return;
+
+    navigate(selectedBranch ? "/home" : "/select-branch", {
+      replace: true,
+    });
+  }, [isLoading, isLoggedIn, selectedBranch, navigate]);
+
+  if (isLoading || isLoggedIn) {
+    return null;
+  }
+
+  return <LandingPageContent />;
+}
+
+// =========================
+// App
+// =========================
 
 function App() {
   return (
     <ToastProvider>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        {/* أضف باقي الصفحات هون، متل /select-branch */}
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          {/* Landing */}
+          <Route
+            path="/"
+            element={<LandingRoute />}
+          />
+
+          {/* Home بعد تسجيل الدخول واختيار الفرع */}
+          <Route
+            path="/home"
+            element={<HomePage />}
+          />
+
+          {/* مساعد مسار التميز AI */}
+          <Route
+            path="/ai-path"
+            element={<AIAssistantPage />}
+          />
+
+          {/* Authentication */}
+          <Route
+            path="/login"
+            element={<LoginPage />}
+          />
+
+          <Route
+            path="/register"
+            element={<RegisterPage />}
+          />
+
+          <Route
+            path="/verify-otp"
+            element={<VerifyOtpPage />}
+          />
+
+          <Route
+            path="/forgot-password"
+            element={<ForgotPasswordPage />}
+          />
+
+          <Route
+            path="/reset-password"
+            element={<ResetPasswordPage />}
+          />
+
+          {/* Select Branch */}
+          <Route
+            path="/select-branch"
+            element={<SelectBranchPage />}
+          />
+        </Routes>
+      </AuthProvider>
     </ToastProvider>
   );
 }

@@ -38,7 +38,7 @@ export function ToastProvider({ children }) {
     <ToastContext.Provider value={{ showToast }}>
       {children}
 
-      <div className="pointer-events-none fixed top-6 right-6 z-[100] flex flex-col items-end gap-3 px-4 max-w-md w-full">
+      <div className="pointer-events-none fixed top-6 right-6 z-[100] flex flex-col items-end gap-3 px-4 max-w-md w-full perspective-[1200px]">
         {toasts.map((toast) => (
           <div
             key={toast.id}
@@ -87,6 +87,7 @@ export function ToastProvider({ children }) {
               </button>
             </div>
 
+            {/* شريط التقدم الزمني السفلي */}
             <div className="absolute bottom-0 right-0 left-0 h-1 bg-slate-100 overflow-hidden rounded-b-2xl">
               <div
                 className={`toast-progress h-full ${

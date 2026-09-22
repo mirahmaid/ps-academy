@@ -4,7 +4,7 @@ const stats = [
   { value: 300, suffix: "", label: "طالب ملتحق" },
   { value: 32, suffix: "", label: "دورة متخصصة" },
   { value: 25, suffix: "", label: "معلم متخصص" },
-  { value: 10, suffix: "", label: "اعوام من الابتكار التعليمي" },
+  { value: 10, suffix: "", label: "أعوام من الابتكار التعليمي" },
 ];
 
 export default function StatsSection() {

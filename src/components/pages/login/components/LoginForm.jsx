@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../../context/AuthContext";
 
 // غيّر هاد الرابط حسب طريقة الـ env عندك (Vite: import.meta.env.VITE_API_URL / CRA: process.env.REACT_APP_API_URL)
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -60,9 +62,16 @@ export default function LoginForm() {
 
       if (res.ok) {
         if (data.accessToken) {
-          localStorage.setItem("accessToken", data.accessToken);
+          // بدل الكتابة المباشرة بـ localStorage: نستخدم login() من الـ
+          // context، هيك بينحفظ التوكن بالـ localStorage وبنفس الوقت
+          // بيتحدث الـ state الداخلي (isLoggedIn) فوراً بدون ما ننتظر
+          // حدث "storage" (يلي أصلاً ما بينطلق بنفس التاب).
+          const userData = data.user ?? null;
+
+          login(data.accessToken, userData, data.refreshToken);
         }
-        navigate("/select-branch");
+
+        navigate("/select-branch", { replace: true });
         return;
       }
 

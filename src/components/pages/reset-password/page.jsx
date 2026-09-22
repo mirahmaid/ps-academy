@@ -144,7 +144,7 @@ export default function ResetPassword() {
                 إعادة تعيين كلمة المرور
               </h1>
               <p className="text-sm text-slate-600 font-medium">
-                أدخل كلمة مرور تتكون من 6 أحرف على الأقل، وتتضمن أرقاماً ورموزاً.
+                أدخل كلمة مرور تتكون من 6 أحرف على الأقل، وتتضمن أرقاماً وحروفاً.
               </p>
             </div>
 
